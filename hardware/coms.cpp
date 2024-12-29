@@ -2,9 +2,10 @@
 // Coms object to prevent multiple instance of the single coms parameter
 // Created by ceyx on 12/17/24.
 //
-
+#define FMT_HEADER_ONLY
 #include "coms.h"
-
+#include "spdlog/spdlog.h"
+#include "spdlog/fmt/ostr.h"
 #include <iostream>
 
 #define PROTOCOL_VERSION 1.0
@@ -21,18 +22,18 @@ namespace hardware {
         // Open Serial Port
         dxl_com_result_ = port_handler_->openPort();
         if (dxl_com_result_ == false) {
-            std::cout << "Failed to open port" << std::endl;
+            spdlog::error("Failed to open port");
             return false;
         }
-        std::cout << "Port opened" << std::endl;
+        spdlog::info("Port opened ");
 
         // Set the baud rate of the serial port (use DYNAMIXEL Baud rate)
         dxl_com_result_ = port_handler_->setBaudRate(baud_rate_);
         if (dxl_com_result_ == false) {
-            std::cout << "Failed to set baud rate" << std::endl;
+            spdlog::error("Failed to set baud rate");
             return false;
         }
-        std::cout << "Set baud rate" << std::endl;
+        spdlog::info("Set baud rate ");
 
         return true;
     }
@@ -41,7 +42,7 @@ namespace hardware {
         dxl_com_result_ = packet_handler_->write2ByteTxRx(port_handler_, dynamixel_id, address, value, &dxl_error_);
 
         if (dxl_com_result_ != COMM_SUCCESS) {
-            std::cout << "Failed to write to port" << std::endl;
+            spdlog::error("Failed to write from port");
             return false;
         }
         return true;
@@ -51,7 +52,7 @@ namespace hardware {
         dxl_com_result_ = packet_handler_->write1ByteTxRx(port_handler_, dynamixel_id, address, value, &dxl_error_);
 
         if (dxl_com_result_ != COMM_SUCCESS) {
-            std::cout << "Failed to write to port" << std::endl;
+            spdlog::error("Failed to write from port");
             return false;
         }
         return true;
@@ -61,7 +62,7 @@ namespace hardware {
         dxl_com_result_ = packet_handler_->read2ByteTxRx(port_handler_, dynamixel_id, address, data, &dxl_error_);
 
         if (dxl_com_result_ != COMM_SUCCESS) {
-            std::cout << "Failed to read from port" << std::endl;
+            spdlog::error("Failed to read from port");
             return false;
         }
         return true;
@@ -71,7 +72,7 @@ namespace hardware {
         dxl_com_result_ = packet_handler_->read1ByteTxRx(port_handler_, dynamixel_id, address, data, &dxl_error_);
 
         if (dxl_com_result_ != COMM_SUCCESS) {
-            std::cout << "Failed to read from port" << std::endl;
+            spdlog::error("Failed to read from port");
             return false;
         }
 
@@ -79,7 +80,7 @@ namespace hardware {
     };
 
     void coms::disconnect() const {
-        std::cout << "Port closing" << std::endl;
+        spdlog::info("Disconnecting...");
         port_handler_->closePort();
 
         delete packet_handler_;

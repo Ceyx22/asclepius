@@ -21,7 +21,6 @@ namespace hardware {
         uint8_t dxl_com_result_ = 0;
 
     public:
-        // port_handler_(dynamixel::PortHandler::getPortHandler (port_name.c_str())),packet_handler_ (dynamixel::PacketHandler::getPacketHandler(PROTOCOL_VERSION)),
         coms(const std::string &port_name, int baud_rate);
 
         bool connect();

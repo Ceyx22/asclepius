@@ -1,6 +1,7 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
+
 #include "hardware/coms.h"
 #include "hardware/motor.h"
 using namespace std::this_thread;
@@ -16,9 +17,10 @@ int main() {
     motor_a.enable_torque(main_coms);
     // motor_a.update_feedback(main_coms);
     motor_a.set_commanded_position(2.61799, main_coms);
-    // sleep_for(10s);
+    sleep_for(1s);
 
     motor_a.update_feedback(main_coms);
+    sleep_for(10ns);
     auto e = motor_a.get_position_error();
     std::cout << e << std::endl;
 
