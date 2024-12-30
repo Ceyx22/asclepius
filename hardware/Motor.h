@@ -5,14 +5,14 @@
 #ifndef MOTOR_H
 #define MOTOR_H
 
-#include "coms.h"
+#include "Coms.h"
 
 #include <cmath>
 #include <cstdint>
 #include <dynamixel_sdk/dynamixel_sdk.h>
 
 namespace hardware {
-    class motor {
+    class Motor {
     protected:
         // EEPROM AREA - Stored permanently and requires a reboot to take effect
         const uint8_t ADDR_MODEL_NUMBER_L = 0;
@@ -68,13 +68,17 @@ namespace hardware {
         const uint16_t MIN_CW_MOTOR_RPM = 1024;
 
 
-        const uint8_t id_{};
+        uint8_t id_{};
         // offset is in radians
-        const double_t offset_{};
+        double_t offset_{};
 
         // between 0 and 1023
-        // uint16_t motor_byte_position_{};
-        // uint16_t motor_byte_velocity_{};
+        uint16_t motor_byte_position_{};
+        uint16_t motor_byte_velocity_{};
+        double_t motor_rpm_{};
+
+        uint16_t motor_byte_position_command_{};
+        uint16_t motor_byte_rpm_command_{};
 
         // radians
         double_t actual_position_{};
@@ -83,24 +87,26 @@ namespace hardware {
         double_t commanded_velocity_{};
 
     public:
-        explicit motor(const uint8_t id, const uint16_t offset)
-            : id_(id), offset_(offset) {
-        };
+        explicit Motor(uint8_t id, double_t offset);
 
-        void enable_torque(coms connection_) const;
+        void enable_torque(Coms connection_) const;
 
-        void disable_torque(coms connection_) const;
+        void disable_torque(Coms connection_) const;
 
         [[nodiscard]] double_t get_position_error() const;
 
         [[nodiscard]] double_t get_velocity_error() const;
 
-        void set_commanded_position(double_t commanded_position, coms connection_);
+        void set_commanded_position(double_t commanded_position, Coms connection_);
 
-        void set_commanded_velocity(double_t commanded_velocity, coms connection_);
+        void set_commanded_velocity(double_t commanded_velocity, Coms connection_);
 
-        void update_feedback(coms connection_);
+        void update_feedback(Coms connection_);
     };
+
+    double_t interpolate(double_t x1, double_t y1, double_t x2, double_t y2, double_t input);
+
+    double_t rpm_to_rad_sec(double_t rpm);
 } // namespace hardware
 
 #endif // MOTOR_H

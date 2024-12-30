@@ -5,13 +5,12 @@
 #ifndef COMS_H
 #define COMS_H
 
+#include <cmath>
 #include <string>
-
 #include "dynamixel_sdk/dynamixel_sdk.h"
-#define PROTOCOL_VERSION 1.0
 
 namespace hardware {
-    class coms {
+    class Coms {
     protected:
         dynamixel::PortHandler *port_handler_;
         dynamixel::PacketHandler *packet_handler_;
@@ -19,9 +18,10 @@ namespace hardware {
 
         uint8_t dxl_error_ = 0;
         uint8_t dxl_com_result_ = 0;
+        const double_t PROTOCOL_VERSION = 1.0;
 
     public:
-        coms(const std::string &port_name, int baud_rate);
+        Coms(const std::string &port_name, int baud_rate);
 
         bool connect();
 
