@@ -7,28 +7,25 @@
 #include "hardware/Coms.h"
 #include "hardware/Motor.h"
 #include "util/LoggerManager.h"
-using namespace std::this_thread;
-using namespace std::chrono_literals;
+#include "robot/EndEffector.h"
+#include "util/Scheduler.h"
 
 int main() {
     const auto logger = util::LoggerManager::getLogger();
+    double_t dt = 0.000612;
     logger->info("Starting...");
     const auto port = "/dev/ttyUSB0";
     constexpr auto baud_rate = 1000000;
     auto main_coms = hardware::Coms(port, baud_rate);
-    // hardware::coms main_coms;
-    main_coms.connect();
-    auto motor_a = hardware::Motor(7, 0);
-    motor_a.enable_torque(main_coms);
-    motor_a.set_commanded_position(2.61799, main_coms);
-    sleep_for(1s);
-
-    motor_a.update_feedback(main_coms);
-    sleep_for(10ns);
-    auto e = motor_a.get_position_error();
-
-    main_coms.disconnect();
-
+    std::vector<u_int8_t> ids = {7, 9, 10, 11};
+    auto rbot = robot::EndEffector(main_coms, ids);
+    rbot.setup();
+    util::Scheduler scheduler(1);
+    scheduler.add_task([&rbot]() {
+        rbot.update_feedback();
+    });
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+    rbot.shutdown();
     return 0;
 }
 

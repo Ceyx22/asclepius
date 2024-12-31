@@ -23,7 +23,7 @@ namespace hardware {
     public:
         Coms(const std::string &port_name, int baud_rate);
 
-        bool connect();
+        void connect();
 
         void disconnect() const;
 
