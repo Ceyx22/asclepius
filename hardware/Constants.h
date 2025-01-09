@@ -55,7 +55,7 @@ namespace constants {
 
 
     constexpr uint16_t MAX_MOTOR_VALUE = 1023;
-    constexpr uint16_t MIN_MOTOR_VALUE = 0;
+    constexpr uint16_t MIN_MOTOR_VALUE = 1;
 
     constexpr double MAX_RADIANS = 5.23089680507;
     constexpr double MIN_RADIANS = 0;

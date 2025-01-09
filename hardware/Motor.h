@@ -20,7 +20,7 @@ namespace hardware {
         double_t offset_{};
 
         uint8_t home_byte_position = 0;
-        double_t home_position_ = 0.0;
+        // double_t home_position_ = 0.0;
 
         // between 0 and 1023
         uint16_t motor_byte_position_{};
@@ -31,10 +31,10 @@ namespace hardware {
         uint16_t motor_byte_rpm_command_{};
 
         // radians
-        double_t actual_position_{};
-        double_t actual_velocity_{};
-        double_t commanded_position_{};
-        double_t commanded_velocity_{};
+        // double_t actual_position_{};
+        // double_t actual_velocity_{};
+        // double_t commanded_position_{};
+        // double_t commanded_velocity_{};
 
     public:
         explicit Motor(uint8_t id, double_t offset);
@@ -43,22 +43,18 @@ namespace hardware {
 
         void disable_torque(Coms connection_) const;
 
-        [[nodiscard]] double_t get_position_error() const;
-
-        [[nodiscard]] double_t get_velocity_error() const;
-
         void set_commanded_position(double_t commanded_position, Coms connection_);
 
         void set_commanded_velocity(double_t commanded_velocity, Coms connection_);
 
-        void update_feedback(Coms connection_);
+        // void update_feedback(Coms connection_);
 
-        void go_home(Coms connection_) const;
+        double_t get_feedback_position(Coms connection_);
+
+        double_t get_feedback_velocity(Coms connection_);
+
+        // bool is_home();
     };
-
-    double_t interpolate(double_t x1, double_t y1, double_t x2, double_t y2, double_t input);
-
-    double_t rpm_to_rad_sec(double_t rpm);
 } // namespace hardware
 
 #endif // MOTOR_H

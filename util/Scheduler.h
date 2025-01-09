@@ -1,34 +1,38 @@
-//
-// Created by ceyx on 12/30/24.
-//
-
 #ifndef SCHEDULER_H
 #define SCHEDULER_H
 
 #include <functional>
 #include <queue>
+#include <vector>
+#include <chrono>
 #include <thread>
-#include <condition_variable>
+#include <iostream>
 
 namespace util {
-    class Scheduler {
-    public:
-        explicit Scheduler(size_t threadCount);
+    struct Task {
+        int priority;
+        std::string name;
+        std::function<void()> callback;
+        std::chrono::steady_clock::time_point nextRunTime;
+        std::chrono::milliseconds interval;
 
-        ~Scheduler();
-
-        void add_task(const std::function<void()> &task);
-
-    protected:
-        std::function<void()> Task;
-        std::vector<std::thread> workers;
-        std::queue<std::function<void()> > tasks;
-        std::mutex queueMutex;
-        std::condition_variable condition;
-        bool stop;
+        bool operator<(const Task &other) const {
+            return priority < other.priority;
+        }
     };
 
+    class Scheduler {
+    private:
+        std::priority_queue<Task> taskQueue;
 
-#endif //SCHEDULER_H
+    public:
+        void addTask(const std::string &name, int priority, const std::function<void()> &callback,
+                     std::chrono::milliseconds interval = std::chrono::milliseconds(0));
+
+
+        void run();
+    };
 }
 
+
+#endif // SCHEDULER_H

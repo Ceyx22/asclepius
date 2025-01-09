@@ -36,6 +36,10 @@ set(SOURCES
         util/Scheduler.cpp
         util/Scheduler.h
         hardware/Constants.h
+        util/MathUtil.cpp
+        util/MathUtil.h
+        robot/Trajectory.cpp
+        robot/Trajectory.h
 )
 
 set(LIBRARIES dxl_x64_cpp rt)

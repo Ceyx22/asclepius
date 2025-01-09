@@ -1,42 +1,37 @@
-//
-// Created by ceyx on 12/30/24.
-//
-
 #include "Scheduler.h"
 
 namespace util {
-    Scheduler::Scheduler(const size_t threadCount) : stop(false) {
-        for (size_t i = 0; i < threadCount; ++i) {
-            workers.emplace_back([this]() {
-                while (true) {
-                    std::function<void()> task; {
-                        std::unique_lock<std::mutex> lock(queueMutex);
-                        condition.wait(lock, [this]() { return stop || !tasks.empty(); });
-                        if (stop && tasks.empty()) return;
-                        task = std::move(tasks.front());
-                        tasks.pop();
-                    }
-                    task();
+    void Scheduler::addTask(const std::string &name, int priority, const std::function<void()> &callback,
+                            std::chrono::milliseconds interval) {
+        Task newTask;
+        newTask.name = name;
+        newTask.priority = priority;
+        newTask.callback = callback;
+        newTask.nextRunTime = std::chrono::steady_clock::now() + interval;
+        newTask.interval = interval;
+        taskQueue.push(newTask);
+    }
+
+    void Scheduler::run() {
+        while (!taskQueue.empty()) {
+            Task currentTask = taskQueue.top();
+            taskQueue.pop();
+
+            auto now = std::chrono::steady_clock::now();
+            if (now >= currentTask.nextRunTime) {
+                std::cout << "Executing task: " << currentTask.name << "\n";
+                currentTask.callback();
+
+                if (currentTask.interval.count() > 0) {
+                    currentTask.nextRunTime = now + currentTask.interval;
+                    taskQueue.push(currentTask);
                 }
-            });
+            } else {
+                // If the task's time hasn't come, push it back and sleep for a while
+                taskQueue.push(currentTask);
+                std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            }
         }
-    }
-
-    Scheduler::~Scheduler() { {
-            std::unique_lock<std::mutex> lock(queueMutex);
-            stop = true;
-        }
-        condition.notify_all();
-        for (std::thread &worker: workers) {
-            worker.join();
-        }
-    }
-
-    void Scheduler::add_task(const std::function<void()> &task) { {
-            std::unique_lock<std::mutex> lock(queueMutex);
-            tasks.push(task);
-        }
-        condition.notify_one();
     }
 }
 

@@ -17,23 +17,25 @@ namespace robot {
 
         void update_feedback();
 
-        void setup() const;
+        void setup();
 
         void shutdown() const;
+
+        void send_commands(const std::vector<double_t> &positions, const std::vector<double_t> &velocities) const;
 
     protected:
         hardware::Coms &coms_;
         std::vector<std::unique_ptr<hardware::Motor> > motors_;
+        std::vector<double_t> home_positions_;
+        std::vector<double_t> actual_positions_;
+        std::vector<double_t> actual_velocities_;
+        double_t deadband_;
 
         void enable_motors() const;
 
         void disable_motors() const;
 
-        void send_positions(const std::vector<double_t> &positions) const;
-
-        void send_velocities(const std::vector<double_t> &velocities) const;
-
-        void go_home() const;
+        [[nodiscard]] bool all_motors_home_() const;
     };
 } // robot
 
