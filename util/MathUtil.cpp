@@ -59,4 +59,12 @@ namespace util {
     double_t rpm_to_rad_sec(const double_t rpm) {
         return 60 * rpm / (2 * M_PI);
     }
+
+    double_t rad_sec_to_rpm(const double_t rad) {
+        return rad * (60 / (2 * M_PI));
+    }
+
+    // double_t calc_max_accel(const double_t max_torque, const double_t moment_of_inertia) {
+    //     return max_torque / moment_of_inertia;
+    // }
 } // util

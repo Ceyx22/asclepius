@@ -14,7 +14,7 @@ namespace hardware {
     public:
         Coms(const std::string &port_name, int baud_rate);
 
-        void connect();
+        void connect() const;
 
         void disconnect() const;
 
@@ -32,7 +32,6 @@ namespace hardware {
         int baud_rate_;
 
         uint8_t dxl_error_ = 0;
-        uint8_t dxl_com_result_ = 0;
         const double_t PROTOCOL_VERSION = 1.0;
     };
 }

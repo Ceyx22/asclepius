@@ -13,7 +13,7 @@
 namespace robot {
     class EndEffector {
     public:
-        explicit EndEffector(hardware::Coms &coms, const std::vector<uint8_t> &ids);
+        explicit EndEffector(const std::shared_ptr<hardware::Coms> &coms, const std::vector<uint8_t> &ids);
 
         void update_feedback();
 
@@ -24,7 +24,7 @@ namespace robot {
         void send_commands(const std::vector<double_t> &positions, const std::vector<double_t> &velocities) const;
 
     protected:
-        hardware::Coms &coms_;
+        std::shared_ptr<hardware::Coms> coms_;
         std::vector<std::unique_ptr<hardware::Motor> > motors_;
         std::vector<double_t> home_positions_;
         std::vector<double_t> actual_positions_;

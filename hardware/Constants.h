@@ -55,13 +55,15 @@ namespace constants {
 
 
     constexpr uint16_t MAX_MOTOR_VALUE = 1023;
-    constexpr uint16_t MIN_MOTOR_VALUE = 1;
+    constexpr uint16_t MIN_MOTOR_VALUE = 0;
 
     constexpr double MAX_RADIANS = 5.23089680507;
     constexpr double MIN_RADIANS = 0;
     constexpr double RADS_PER_SEC_TO_RPM = 9.549297;
-    constexpr double MAX_RPM = 59.0;
-    constexpr double MIN_RPM = 0;
+    //FIX NAMEING
+    constexpr double MAX_RPM_RANGE = 114.0;
+    constexpr double MAX_NO_LOAD_RPM = 59.0;
+    constexpr double MIN_RPM = 0.0;
     constexpr uint16_t MAX_CCW_MOTOR_RPM_BYTE = 1023;
     constexpr uint16_t MIN_CCW_MOTOR_RPM_BYTE = 0;
     constexpr uint16_t MAX_CW_MOTOR_RPM_BYTE = 2047;

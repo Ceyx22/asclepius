@@ -22,18 +22,16 @@ namespace hardware {
      * Goes through and establishes a connection to the port and
      * sets the baud rate
      */
-    void Coms::connect() {
-        // Open Serial Port
-        dxl_com_result_ = port_handler_->openPort();
-        if (dxl_com_result_ == false) {
+    void Coms::connect() const {
+        if (port_handler_->openPort() == false) {
             spdlog::error("Failed to open port");
+            // throw exception
         }
         spdlog::info("Port opened ");
 
-        // Set the baud rate of the serial port (use DYNAMIXEL Baud rate)
-        dxl_com_result_ = port_handler_->setBaudRate(baud_rate_);
-        if (dxl_com_result_ == false) {
+        if (port_handler_->setBaudRate(baud_rate_) == false) {
             spdlog::error("Failed to set baud rate");
+            //throw exception
         }
         spdlog::info("Set baud rate ");
     }
@@ -43,10 +41,8 @@ namespace hardware {
      * Writes the 2 bytes to the motor
      */
     bool Coms::write2ByteTxRx(const uint8_t dynamixel_id, const uint16_t address, const uint16_t value) {
-        dxl_com_result_ = packet_handler_->write2ByteTxRx(port_handler_, dynamixel_id, address, value, &dxl_error_);
-
-        if (dxl_com_result_ != COMM_SUCCESS) {
-            spdlog::error("Failed to write from port");
+        if (packet_handler_->write2ByteTxRx(port_handler_, dynamixel_id, address, value, &dxl_error_) != COMM_SUCCESS) {
+            spdlog::error("Failed to write from port, Error msg: {}", dxl_error_);
             return false;
         }
         return true;
@@ -56,10 +52,8 @@ namespace hardware {
      * Writes the byte to the motor
      */
     bool Coms::write1ByteTxRx(const uint8_t dynamixel_id, const uint16_t address, const uint8_t value) {
-        dxl_com_result_ = packet_handler_->write1ByteTxRx(port_handler_, dynamixel_id, address, value, &dxl_error_);
-
-        if (dxl_com_result_ != COMM_SUCCESS) {
-            spdlog::error("Failed to write from port");
+        if (packet_handler_->write1ByteTxRx(port_handler_, dynamixel_id, address, value, &dxl_error_) != COMM_SUCCESS) {
+            spdlog::error("Failed to write from port, Error msg: {}", dxl_error_);
             return false;
         }
         return true;
@@ -69,10 +63,8 @@ namespace hardware {
      * Reads the 2 bytes to the motor
      */
     bool Coms::read2ByteTxRx(const uint8_t dynamixel_id, const uint16_t address, uint16_t *data) {
-        dxl_com_result_ = packet_handler_->read2ByteTxRx(port_handler_, dynamixel_id, address, data, &dxl_error_);
-
-        if (dxl_com_result_ != COMM_SUCCESS) {
-            spdlog::error("Failed to read from port");
+        if (packet_handler_->read2ByteTxRx(port_handler_, dynamixel_id, address, data, &dxl_error_) != COMM_SUCCESS) {
+            spdlog::error("Failed to read from port, Error msg: {}", dxl_error_);
             return false;
         }
         return true;
@@ -82,10 +74,8 @@ namespace hardware {
      * Reads the byte to the motor
      */
     bool Coms::read1ByteTxRx(const uint8_t dynamixel_id, const uint16_t address, uint8_t *data) {
-        dxl_com_result_ = packet_handler_->read1ByteTxRx(port_handler_, dynamixel_id, address, data, &dxl_error_);
-
-        if (dxl_com_result_ != COMM_SUCCESS) {
-            spdlog::error("Failed to read from port");
+        if (packet_handler_->read1ByteTxRx(port_handler_, dynamixel_id, address, data, &dxl_error_) != COMM_SUCCESS) {
+            spdlog::error("Failed to read from port, Error msg: {}", dxl_error_);
             return false;
         }
 

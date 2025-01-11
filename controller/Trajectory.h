@@ -10,16 +10,18 @@
 namespace robot {
     class Trajectory {
     public:
-        explicit Trajectory(const std::vector<double_t> &desired_angles);
+        explicit Trajectory(const std::vector<double_t> &desired_angles,
+                            const std::vector<double_t> &start_position, double_t end_time);
 
+        // std::vector<std::tuple<double_t, double_t>>
         std::tuple<std::vector<double_t>, std::vector<double_t> > calcTrajectory(double_t t, double_t dt);
 
     protected:
-        std::vector<double_t> q_;
-        std::vector<double_t> dq_;
+        double_t end_time_{};
+        std::vector<double_t> q_{};
+        std::vector<double_t> dq_{};
 
-        std::vector<double_t> q_0_;
-        std::vector<double_t> dq_0_;
+        std::vector<double_t> q_0_{};
         std::vector<double_t> desired_q_;
     };
 }

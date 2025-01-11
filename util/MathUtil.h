@@ -19,6 +19,8 @@ namespace util {
     double_t interpolate(double_t x1, double_t y1, double_t x2, double_t y2, double_t input);
 
     double_t rpm_to_rad_sec(double_t rpm);
+
+    double_t rad_sec_to_rpm(double_t rad);
 } // util
 
 #endif //MATHUTIL_H
