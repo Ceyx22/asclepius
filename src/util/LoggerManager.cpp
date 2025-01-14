@@ -3,9 +3,6 @@
 //
 #define FMT_HEADER_ONLY
 #include "LoggerManager.h"
-// #include <spdlog/spdlog.h>
-// #include <spdlog/sinks/basic_file_sink.h>
-
 
 namespace util {
     std::shared_ptr<spdlog::logger> LoggerManager::logger = nullptr;

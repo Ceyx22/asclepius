@@ -8,10 +8,10 @@
 #include <vector>
 
 namespace robot {
-    class Trajectory {
+    class TrajectoryController {
     public:
-        explicit Trajectory(const std::vector<double_t> &desired_angles,
-                            const std::vector<double_t> &start_position, double_t end_time);
+        explicit TrajectoryController(const std::vector<double_t> &desired_angles,
+                                      const std::vector<double_t> &start_position, double_t end_time);
 
         // std::vector<std::tuple<double_t, double_t>>
         std::tuple<std::vector<double_t>, std::vector<double_t> > calcTrajectory(double_t t, double_t dt);

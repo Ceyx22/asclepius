@@ -4,7 +4,7 @@
 //
 #define FMT_HEADER_ONLY
 #include "Coms.h"
-#include "util/LoggerManager.h"
+#include "LoggerManager.h"
 #include "spdlog/spdlog.h"
 #include "spdlog/fmt/ostr.h"
 
@@ -22,26 +22,27 @@ namespace hardware {
      * Goes through and establishes a connection to the port and
      * sets the baud rate
      */
-    void Coms::connect() const {
+    bool Coms::connect() {
         if (port_handler_->openPort() == false) {
             spdlog::error("Failed to open port");
-            // throw exception
+            return false;
         }
         spdlog::info("Port opened ");
 
         if (port_handler_->setBaudRate(baud_rate_) == false) {
             spdlog::error("Failed to set baud rate");
-            //throw exception
+            return false;
         }
         spdlog::info("Set baud rate ");
+        return true;
     }
 
 
     /*
      * Writes the 2 bytes to the motor
      */
-    bool Coms::write2ByteTxRx(const uint8_t dynamixel_id, const uint16_t address, const uint16_t value) {
-        if (packet_handler_->write2ByteTxRx(port_handler_, dynamixel_id, address, value, &dxl_error_) != COMM_SUCCESS) {
+    bool Coms::write2Byte(const uint8_t id, const uint16_t address, const uint16_t value) {
+        if (packet_handler_->write2ByteTxRx(port_handler_, id, address, value, &dxl_error_) != COMM_SUCCESS) {
             spdlog::error("Failed to write from port, Error msg: {}", dxl_error_);
             return false;
         }
@@ -51,8 +52,8 @@ namespace hardware {
     /*
      * Writes the byte to the motor
      */
-    bool Coms::write1ByteTxRx(const uint8_t dynamixel_id, const uint16_t address, const uint8_t value) {
-        if (packet_handler_->write1ByteTxRx(port_handler_, dynamixel_id, address, value, &dxl_error_) != COMM_SUCCESS) {
+    bool Coms::write1Byte(const uint8_t id, const uint16_t address, const uint8_t value) {
+        if (packet_handler_->write1ByteTxRx(port_handler_, id, address, value, &dxl_error_) != COMM_SUCCESS) {
             spdlog::error("Failed to write from port, Error msg: {}", dxl_error_);
             return false;
         }
@@ -62,8 +63,8 @@ namespace hardware {
     /*
      * Reads the 2 bytes to the motor
      */
-    bool Coms::read2ByteTxRx(const uint8_t dynamixel_id, const uint16_t address, uint16_t *data) {
-        if (packet_handler_->read2ByteTxRx(port_handler_, dynamixel_id, address, data, &dxl_error_) != COMM_SUCCESS) {
+    bool Coms::read2Byte(const uint8_t id, const uint16_t address, uint16_t *data) {
+        if (packet_handler_->read2ByteTxRx(port_handler_, id, address, data, &dxl_error_) != COMM_SUCCESS) {
             spdlog::error("Failed to read from port, Error msg: {}", dxl_error_);
             return false;
         }
@@ -73,8 +74,8 @@ namespace hardware {
     /*
      * Reads the byte to the motor
      */
-    bool Coms::read1ByteTxRx(const uint8_t dynamixel_id, const uint16_t address, uint8_t *data) {
-        if (packet_handler_->read1ByteTxRx(port_handler_, dynamixel_id, address, data, &dxl_error_) != COMM_SUCCESS) {
+    bool Coms::read1Byte(const uint8_t id, const uint16_t address, uint8_t *data) {
+        if (packet_handler_->read1ByteTxRx(port_handler_, id, address, data, &dxl_error_) != COMM_SUCCESS) {
             spdlog::error("Failed to read from port, Error msg: {}", dxl_error_);
             return false;
         }
@@ -87,11 +88,15 @@ namespace hardware {
      * deletes the port_handler
      * deletes the packet_handler
      */
-    void Coms::disconnect() const {
+    void Coms::disconnect() {
         util::LoggerManager::getLogger()->info("Disconnecting");
         port_handler_->closePort();
 
         delete port_handler_;
         delete packet_handler_;
+    }
+
+    Coms::~Coms() {
+        Coms::disconnect();
     }
 }

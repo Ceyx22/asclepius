@@ -5,8 +5,8 @@
 #ifndef ENDEFFECTOR_H
 #define ENDEFFECTOR_H
 
-#include "hardware/Motor.h"
-#include "hardware/Coms.h"
+#include "Motor.h"
+#include "Coms.h"
 #include <memory>
 #include <utility>
 

@@ -4,9 +4,9 @@
 #define FMT_HEADER_ONLY
 
 #include "EndEffector.h"
-#include "hardware/Coms.h"
-#include "util/LoggerManager.h"
-#include "util/MathUtil.h"
+#include "Coms.h"
+#include "LoggerManager.h"
+#include "MathUtil.h"
 
 namespace robot {
     /*

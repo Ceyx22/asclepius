@@ -5,12 +5,12 @@
 #include <memory>
 #include <thread>
 
-#include "hardware/Coms.h"
-#include "hardware/Motor.h"
-#include "util/LoggerManager.h"
-#include "controller/EndEffector.h"
-#include "controller/Trajectory.h"
-#include "util/Scheduler.h"
+
+#include "LoggerManager.h"
+#include "Coms.h"
+#include "Motor.h"
+#include "EndEffector.h"
+#include "TrajectoryController.h"
 
 int main() {
     const auto logger = util::LoggerManager::getLogger();
@@ -29,8 +29,8 @@ int main() {
 
     std::vector<double_t> state_a = {2.62, 2.62, 2.62, 2.62};
     std::vector<double_t> state_b = {0.0, 0.0, 0.0, 0.0};
-    auto traj_a = robot::Trajectory(state_a, state_b, 5.0);
-    auto traj_b = robot::Trajectory(state_b, state_a, 10.0);
+    auto traj_a = robot::TrajectoryController(state_a, state_b, 5.0);
+    auto traj_b = robot::TrajectoryController(state_b, state_a, 10.0);
     std::tuple<std::vector<double_t>, std::vector<double_t> > curr_traj;
 
 

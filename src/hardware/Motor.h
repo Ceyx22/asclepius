@@ -30,6 +30,8 @@ namespace hardware {
         uint16_t motor_byte_position_command_{};
         uint16_t motor_byte_rpm_command_{};
 
+        uint8_t *torque_status_{};
+
         std::shared_ptr<Coms> connection_;
 
     public:
@@ -39,9 +41,11 @@ namespace hardware {
 
         void disable_torque() const;
 
-        void set_commanded_position(double_t commanded_position);
+        bool set_commanded_position(double_t commanded_position);
 
-        void set_commanded_velocity(double_t commanded_velocity);
+        bool set_commanded_velocity(double_t commanded_velocity);
+
+        [[nodiscard]] bool is_torque_enabled() const;
 
         double_t get_feedback_position();
 
